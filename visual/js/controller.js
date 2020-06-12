@@ -91,7 +91,7 @@ var Controller = StateMachine.create({
 });
 
 $.extend(Controller, {
-    gridSize: [64, 36], // number of nodes horizontally and vertically
+    gridSize: [45, 20], // number of nodes horizontally and vertically
     operationsPerSecond: 300,
 
     /**
@@ -504,4 +504,16 @@ $.extend(Controller, {
     isStartOrEndPos: function(gridX, gridY) {
         return this.isStartPos(gridX, gridY) || this.isEndPos(gridX, gridY);
     },
+    printMapa: function() {
+        var s = "[";
+        for(var i=0; i<20; i++){
+            s += "[";
+            for(var j=0; j<45; j++){
+                s += ((Controller.grid.nodes[i][j].walkable) ? "1," : "0,");
+            }
+            s += "] \n";
+        }
+        s += "]";
+        return s;
+    }
 });
