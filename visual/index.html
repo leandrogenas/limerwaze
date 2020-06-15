@@ -4,7 +4,13 @@
 </head>
 <body>
 
-    <div id="draw_area"></div>
+    <div id="area_desenho"></div>
+
+    <div id="play_panel" class="panel right_panel">
+        <button id="button1" class="control_button">Start Search</button>
+        <button id="button2" class="control_button">Pause Search</button>
+        <button id="button3" class="control_button">Clear Walls</button>
+    </div>
 
     <script src="lib/raphael-min.js"></script>
     <script src="lib/es5-shim.min.js"></script>
@@ -21,7 +27,7 @@
                 event.preventDefault();
             });
 
-            Controller.init();
+            Controller.inicializacao();
         })(jQuery)
     </script>
 </body>

@@ -1,291 +1,361 @@
 /**
- * The visualization controller will works as a state machine.
+ * The visualization Controller will works as a state machine. O Controller da visualização ira funcionar como uma maquina de estado
  * See files under the `doc` folder for transition descriptions.
  * See https://github.com/jakesgordon/javascript-state-machine
  * for the document of the StateMachine module.
  */
 var Controller = StateMachine.create({
-    initial: 'none',
+    initial: 'nada',
     events: [
         {
-            name: 'init',
-            from: 'none',
-            to:   'ready'
+            name: 'inicializacao',
+            from: 'nada',
+            to:   'pronto'
         },
         {
-            name: 'search',
-            from: 'starting',
-            to:   'searching'
+            name: 'busca',
+            from: 'comecando',
+            to:   'buscando'
         },
         {
-            name: 'pause',
-            from: 'searching',
-            to:   'paused'
+            name: 'pausa',
+            from: 'buscando',
+            to:   'pausado'
         },
         {
-            name: 'finish',
-            from: 'searching',
-            to:   'finished'
+            name: 'final',
+            from: 'buscando',
+            to:   'finalizado'
         },
         {
-            name: 'resume',
-            from: 'paused',
-            to:   'searching'
+            name: 'retomado',
+            from: 'pausado',
+            to:   'buscando'
         },
         {
-            name: 'cancel',
-            from: 'paused',
-            to:   'ready'
+            name: 'cancelado',
+            from: 'pausado',
+            to:   'pronto'
         },
         {
-            name: 'modify',
-            from: 'finished',
-            to:   'modified'
+            name: 'modificar',
+            from: 'finalizado',
+            to:   'modificado'
         },
         {
-            name: 'reset',
+            name: 'restaurado',
             from: '*',
-            to:   'ready'
+            to:   'pronto'
         },
         {
-            name: 'clear',
-            from: ['finished', 'modified'],
-            to:   'ready'
+            name: 'limpo',
+            from: ['finalizado', 'modificado'],
+            to:   'pronto'
         },
         {
-            name: 'start',
-            from: ['ready', 'modified', 'restarting'],
-            to:   'starting'
+            name: 'comeco',
+            from: ['pronto', 'modificado', 'reiniciando'],
+            to:   'inicio'
         },
         {
-            name: 'restart',
-            from: ['searching', 'finished'],
-            to:   'restarting'
+            name: 'reiniciar',
+            from: ['buscando', 'finalizado'],
+            to:   'reiniciando'
         },
         {
-            name: 'dragStart',
-            from: ['ready', 'finished'],
-            to:   'draggingStart'
+            name: 'arrastaInicio',
+            from: ['pronto', 'finalizado'],
+            to:   'arrastandoInicio'
         },
         {
-            name: 'dragEnd',
-            from: ['ready', 'finished'],
-            to:   'draggingEnd'
+            name: 'arrastaFim',
+            from: ['pronto', 'finalizado'],
+            to:   'arrastandoFim'
         },
         {
-            name: 'drawWall',
-            from: ['ready', 'finished'],
-            to:   'drawingWall'
+            name: 'desenhaParede',
+            from: ['pronto', 'finalizado'],
+            to:   'desenhandoParede'
         },
         {
-            name: 'eraseWall',
-            from: ['ready', 'finished'],
-            to:   'erasingWall'
+            name: 'apagaParede',
+            from: ['pronto', 'finalizado'],
+            to:   'apagandoParede'
         },
         {
-            name: 'rest',
-            from: ['draggingStart', 'draggingEnd', 'drawingWall', 'erasingWall'],
-            to  : 'ready'
+            name: 'parado',
+            from: ['arrastandoInicio', 'arrastandoFim', 'desenhandoParede', 'apagandoParede'],
+            to  : 'pronto'
         },
     ],
 });
 
 $.extend(Controller, {
-    gridSize: [45, 20], // number of nodes horizontally and vertically
-    operationsPerSecond: 300,
+    mapa1: [
+        [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0],
+        [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+        [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+        [0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+        [0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+        [1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+        [0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0],
+        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1],
+        [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
+        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0],
+        [0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1],
+        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,0,0,1,0,0],
+        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0],
+        [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0]
+    ],
+
+    tamGrade: [45, 20], // number of nodes horizontally and vertically
+    opsPorSegundo: 300,
+
+    inicioX: 0,
+    inicioY: 0,
+
+    finalX: 0,
+    finalY: 0,
+
+    finder: null,
+    grade: null,
+    caminho: null,
+    operacoes: null,
+    qtdOperacoes: 0,
+    tempoTotal: 0,
 
     /**
-     * Asynchronous transition from `none` state to `ready` state.
+     * Asynchronous transition from `none` state to `Pronto` state.
      */
-    onleavenone: function() {
-        var numCols = this.gridSize[0],
-            numRows = this.gridSize[1];
+    onleavenada: function(estado, de, para)
+    {
+        var numCol = this.tamGrade[0],
+            numLin = this.tamGrade[1];
 
-        this.grid = new PF.Grid(numCols, numRows);
+        this.grade = new PF.Grid(numCol, numLin);
+        this.$botoes = $('.control_button');
 
-        View.init({
-            numCols: numCols,
-            numRows: numRows
+        View.inicializar({
+            numCol: numCol,
+            numLin: numLin
         });
-        View.generateGrid(function() {
-            Controller.setDefaultStartEndPos();
-            Controller.bindEvents();
-            Controller.transition(); // transit to the next state (ready)
+        View.gerarGrade(function() {
+            Controller.setPosicaoInicialFinal();
+            Controller.bindEventos();
+            //Controller.carregarMapa(null);
+            Controller.transition(); // Vai para o proximo estado (Pronto)
         });
-
-        this.$buttons = $('.control_button');
 
         this.hookPathFinding();
 
         return StateMachine.ASYNC;
-        // => ready
+        // => Pronto
     },
-    ondrawWall: function(event, from, to, gridX, gridY) {
-        this.setWalkableAt(gridX, gridY, false);
-        // => drawingWall
+
+    ondesenhaParede: function(estado, de, para, gradeX, gradeY)
+    {
+        this.setLiberadoEm(gradeX, gradeY, false);
+        // => DesenhandoParede
     },
-    oneraseWall: function(event, from, to, gridX, gridY) {
-        this.setWalkableAt(gridX, gridY, true);
-        // => erasingWall
+
+    onapagaParede: function(estado, de, para, gradeX, gradeY)
+    {
+        this.setLiberadoEm(gradeX, gradeY, true);
+        // => ApagandoParede
     },
-    onsearch: function(event, from, to) {
-        var grid,
-            timeStart, timeEnd,
+
+    onbusca: function(estado, de, para)
+    {
+        var grade,
+            tempoInicio, tempoFinal,
             finder = Panel.getFinder();
 
-        timeStart = window.performance ? performance.now() : Date.now();
-        grid = this.grid.clone();
-        this.path = finder.findPath(
-            this.startX, this.startY, this.endX, this.endY, grid
+        tempoInicio = window.performance ? performance.now() : Date.now();
+        grade = this.grade.clone();
+        this.caminho = finder.findPath(
+            this.inicioX, this.inicioY, this.finalX, this.finalY, grade
         );
-        this.operationCount = this.operations.length;
-        timeEnd = window.performance ? performance.now() : Date.now();
-        this.timeSpent = (timeEnd - timeStart).toFixed(4);
+        this.qtdOperacoes = this.operacoes.length;
+        tempoFinal = window.performance ? performance.now() : Date.now();
+        this.tempoTotal = (tempoFinal - tempoInicio).toFixed(4);
 
         this.loop();
-        // => searching
+        // => buscando
     },
-    onrestart: function() {
+
+    onreinicio: function()
+    {
         // When clearing the colorized nodes, there may be
         // nodes still animating, which is an asynchronous procedure.
         // Therefore, we have to defer the `abort` routine to make sure
-        // that all the animations are done by the time we clear the colors.
+        // that all the animations are done by the time we limpa the colors.
         // The same reason applies for the `onreset` event handler.
         setTimeout(function() {
-            Controller.clearOperations();
-            Controller.clearFootprints();
-            Controller.start();
-        }, View.nodeColorizeEffect.duration * 1.2);
-        // => restarting
+            Controller.limparOperacoes();
+            Controller.limparPassos();
+            Controller.inicio();
+        }, View.efeitoColorirNode.duration * 1.2);
+        // => reiniciando
     },
-    onpause: function(event, from, to) {
-        // => paused
+
+    onpausa: function(estado, de, para)
+    {
+        // => pausado
     },
-    onresume: function(event, from, to) {
+
+    onresume: function(estado, de, para)
+    {
         this.loop();
-        // => searching
+        // => buscando
     },
-    oncancel: function(event, from, to) {
-        this.clearOperations();
-        this.clearFootprints();
-        // => ready
+
+    oncancel: function(estado, de, para)
+    {
+        this.limparOperacoes();
+        this.limparPassos();
+        // => Pronto
     },
-    onfinish: function(event, from, to) {
-        View.showStats({
+
+    onfinish: function(estado, from, to)
+    {
+        View.mostrarStats({
             pathLength: PF.Util.pathLength(this.path),
             timeSpent:  this.timeSpent,
             operationCount: this.operationCount,
         });
-        View.drawPath(this.path);
-        // => finished
+        View.desenharCaminho(this.path);
+        // => finalizado
     },
-    onclear: function(event, from, to) {
-        this.clearOperations();
-        this.clearFootprints();
-        // => ready
+
+    onclear: function(estado, from, to)
+    {
+        this.limparOperacoes();
+        this.limparPassos();
+        // => Pronto
     },
-    onmodify: function(event, from, to) {
-        // => modified
+
+    onmodify: function(estado, de, para)
+    {
+        // => modificado
     },
-    onreset: function(event, from, to) {
+
+    onreset: function(estado, de, para)
+    {
         setTimeout(function() {
-            Controller.clearOperations();
-            Controller.clearAll();
-            Controller.buildNewGrid();
-        }, View.nodeColorizeEffect.duration * 1.2);
-        // => ready
+            Controller.limparOperacoes();
+            Controller.limparTudo();
+            Controller.gerarGrade();
+        }, View.efeitoColorirNode.duration * 1.2);
+        // => Pronto
     },
 
     /**
      * The following functions are called on entering states.
      */
 
-    onready: function() {
-        console.log('=> ready');
-        this.setButtonStates({
+    onpronto: function(estado, de, para)
+    {
+        console.log('=> Pronto');
+        this.setEstadoBotoes({
             id: 1,
-            text: 'Start Search',
+            text: 'Inicio Busca',
             enabled: true,
-            callback: $.proxy(this.start, this),
+            callback: $.proxy(this.inicio, this),
         }, {
             id: 2,
-            text: 'Pause Search',
+            text: 'pausa Busca',
             enabled: false,
         }, {
             id: 3,
-            text: 'Clear Walls',
+            text: 'limpa Walls',
             enabled: true,
             callback: $.proxy(this.reset, this),
         });
-        // => [starting, draggingStart, draggingEnd, drawingStart, drawingEnd]
+        // => [Comecando, ArrastandoInicio, ArrastandoFim, drawingStart, drawingEnd]
     },
-    onstarting: function(event, from, to) {
-        console.log('=> starting');
-        // Clears any existing search progress
-        this.clearFootprints();
-        this.setButtonStates({
+
+    oncomecando: function(estado, de, para)
+    {
+        console.log('=> Comecando');
+        // Clears any existing Busca progress
+        this.limparPassos();
+        this.setEstadoBotoes({
             id: 2,
             enabled: true,
         });
-        this.search();
-        // => searching
+        this.busca();
+        // => buscando
     },
-    onsearching: function() {
-        console.log('=> searching');
-        this.setButtonStates({
+
+    onbuscando: function(estado, de, para)
+    {
+        console.log('=> buscando');
+        this.setEstadoBotoes({
             id: 1,
-            text: 'Restart Search',
+            text: 'reiniciar Busca',
             enabled: true,
-            callback: $.proxy(this.restart, this),
+            callback: $.proxy(this.reiniciar, this),
         }, {
             id: 2,
-            text: 'Pause Search',
+            text: 'pausa Busca',
             enabled: true,
-            callback: $.proxy(this.pause, this),
+            callback: $.proxy(this.pausa, this),
         });
-        // => [paused, finished]
+        // => [pausado, finalizado]
     },
-    onpaused: function() {
-        console.log('=> paused');
-        this.setButtonStates({
+
+    onpausado: function(estado, de, para)
+    {
+        console.log('=> pausado');
+        this.setEstadoBotoes({
             id: 1,
-            text: 'Resume Search',
+            text: 'Resume Busca',
             enabled: true,
             callback: $.proxy(this.resume, this),
         }, {
             id: 2,
-            text: 'Cancel Search',
+            text: 'Cancel Busca',
             enabled: true,
             callback: $.proxy(this.cancel, this),
         });
-        // => [searching, ready]
+        // => [buscando, Pronto]
     },
-    onfinished: function() {
-        console.log('=> finished');
-        this.setButtonStates({
+
+    onfinalizado: function(estado, de, para)
+    {
+        console.log('=> finalizado');
+        this.setEstadoBotoes({
             id: 1,
-            text: 'Restart Search',
+            text: 'reiniciar Busca',
             enabled: true,
-            callback: $.proxy(this.restart, this),
+            callback: $.proxy(this.reiniciar, this),
         }, {
             id: 2,
-            text: 'Clear Path',
+            text: 'limpa Path',
             enabled: true,
-            callback: $.proxy(this.clear, this),
+            callback: $.proxy(this.limpa, this),
         });
     },
-    onmodified: function() {
-        console.log('=> modified');
-        this.setButtonStates({
+
+    onmodificado: function(estado, de, para)
+    {
+        console.log('=> modificado');
+        this.setEstadoBotoes({
             id: 1,
-            text: 'Start Search',
+            text: 'Inicio Busca',
             enabled: true,
-            callback: $.proxy(this.start, this),
+            callback: $.proxy(this.Inicio, this),
         }, {
             id: 2,
-            text: 'Clear Path',
+            text: 'limpa Path',
             enabled: true,
-            callback: $.proxy(this.clear, this),
+            callback: $.proxy(this.limpa, this),
         });
     },
 
@@ -296,173 +366,198 @@ $.extend(Controller, {
     hookPathFinding: function() {
 
         PF.Node.prototype = {
-            get opened() {
-                return this._opened;
+            get aberto() {
+                return this._aberto;
             },
-            set opened(v) {
-                this._opened = v;
-                Controller.operations.push({
+            set aberto(v) {
+                this._aberto = v;
+                Controller.operacoes.push({
                     x: this.x,
                     y: this.y,
-                    attr: 'opened',
-                    value: v
+                    attr: 'aberto',
+                    valor: v
                 });
             },
-            get closed() {
-                return this._closed;
+            get fechado() {
+                return this._fechado;
             },
-            set closed(v) {
-                this._closed = v;
-                Controller.operations.push({
+            set fechado(v) {
+                this._fechado = v;
+                Controller.operacoes.push({
                     x: this.x,
                     y: this.y,
-                    attr: 'closed',
-                    value: v
+                    attr: 'fechado',
+                    valor: v
                 });
             },
-            get tested() {
-                return this._tested;
+            get testado() {
+                return this._testado;
             },
-            set tested(v) {
-                this._tested = v;
-                Controller.operations.push({
+            set testado(v) {
+                this._testado = v;
+                Controller.operacoes.push({
                     x: this.x,
                     y: this.y,
-                    attr: 'tested',
-                    value: v
+                    attr: 'testado',
+                    valor: v
                 });
             },
         };
 
-        this.operations = [];
+        this.operacoes = [];
     },
-    bindEvents: function() {
-        $('#draw_area').mousedown($.proxy(this.mousedown, this));
+
+    bindEventos: function()
+    {
+        $('#area_desenho').mousedown($.proxy(this.mousedown, this));
         $(window)
             .mousemove($.proxy(this.mousemove, this))
             .mouseup($.proxy(this.mouseup, this));
     },
-    loop: function() {
-        var interval = 1000 / this.operationsPerSecond;
+
+    loop: function()
+    {
+        var intervalo = 1000 / this.opsPorSegundo;
         (function loop() {
-            if (!Controller.is('searching')) {
+            if (!Controller.is('buscando')) {
                 return;
             }
-            Controller.step();
-            setTimeout(loop, interval);
+            Controller.passo();
+            setTimeout(loop, intervalo);
         })();
     },
-    step: function() {
-        var operations = this.operations,
-            op, isSupported;
+
+    passo: function()
+    {
+        var operacoes = this.operacoes,
+            op, suportado;
 
         do {
-            if (!operations.length) {
-                this.finish(); // transit to `finished` state
+            if (!operacoes.length) {
+                this.final(); // transit to `finalizado` state
                 return;
             }
-            op = operations.shift();
-            isSupported = View.supportedOperations.indexOf(op.attr) !== -1;
-        } while (!isSupported);
+            op = operacoes.shift();
+            suportado = View.opsSuportadas.indexOf(op.attr) !== -1;
+        } while (!suportado);
 
-        View.setAttributeAt(op.x, op.y, op.attr, op.value);
+        View.setAtributoEm(op.x, op.y, op.attr, op.valor);
     },
-    clearOperations: function() {
-        this.operations = [];
-    },
-    clearFootprints: function() {
-        View.clearFootprints();
-        View.clearPath();
-    },
-    clearAll: function() {
-        this.clearFootprints();
-        View.clearBlockedNodes();
-    },
-    buildNewGrid: function() {
-        this.grid = new PF.Grid(this.gridSize[0], this.gridSize[1]);
-    },
-    mousedown: function (event) {
-        var coord = View.toGridCoordinate(event.pageX, event.pageY),
-            gridX = coord[0],
-            gridY = coord[1],
-            grid  = this.grid;
 
-        if (this.can('dragStart') && this.isStartPos(gridX, gridY)) {
-            this.dragStart();
+    limparOperacoes: function()
+    {
+        this.operacoes = [];
+    },
+
+    limparPassos: function()
+    {
+        View.limparPassos();
+        View.limparCaminho();
+    },
+
+    limparTudo: function()
+    {
+        this.limparPassos();
+        View.limparNosBloqueados();
+    },
+
+    gerarGrade: function()
+    {
+        this.Grade = new PF.Grid(this.tamGrade[0], this.tamGrade[1]);
+    },
+
+    mousedown: function (evento)
+    {
+        var coord = View.toGridCoordinate(evento.pageX, evento.pageY),
+            gradeX = coord[0],
+            gradeY = coord[1],
+            grade  = this.grade;
+
+        if (this.can('arrastaInicio') && this.isPosicaoInicial(gradeX, gradeY)) {
+            this.arrastaInicio();
             return;
         }
-        if (this.can('dragEnd') && this.isEndPos(gridX, gridY)) {
-            this.dragEnd();
+        if (this.can('arrastaFim') && this.isPosicaoFinal(gradeX, gradeY)) {
+            this.arrastaFim();
             return;
         }
-        if (this.can('drawWall') && grid.isWalkableAt(gridX, gridY)) {
-            this.drawWall(gridX, gridY);
+        if (this.can('desenhaParede') && grade.isWalkableAt(gradeX, gradeY)) {
+            this.desenhaParede(gradeX, gradeY);
             return;
         }
-        if (this.can('eraseWall') && !grid.isWalkableAt(gridX, gridY)) {
-            this.eraseWall(gridX, gridY);
+        if (this.can('apagaParede') && !grade.isWalkableAt(gradeX, gradeY)) {
+            this.apagaParede(gradeX, gradeY);
         }
     },
-    mousemove: function(event) {
-        var coord = View.toGridCoordinate(event.pageX, event.pageY),
-            grid = this.grid,
-            gridX = coord[0],
-            gridY = coord[1];
 
-        if (this.isStartOrEndPos(gridX, gridY)) {
+    mousemove: function(evento)
+    {
+        var coord = View.toGridCoordinate(evento.pageX, evento.pageY),
+            grade = this.grade,
+            gradeX = coord[0],
+            gradeY = coord[1];
+
+        if (this.isPosicaoInicialOuFinal(gradeX, gradeY)) {
             return;
         }
 
         switch (this.current) {
-        case 'draggingStart':
-            if (grid.isWalkableAt(gridX, gridY)) {
-                this.setStartPos(gridX, gridY);
-            }
-            break;
-        case 'draggingEnd':
-            if (grid.isWalkableAt(gridX, gridY)) {
-                this.setEndPos(gridX, gridY);
-            }
-            break;
-        case 'drawingWall':
-            this.setWalkableAt(gridX, gridY, false);
-            break;
-        case 'erasingWall':
-            this.setWalkableAt(gridX, gridY, true);
-            break;
+            case 'arrastandoInicio':
+                if (grade.isWalkableAt(gradeX, gradeY)) {
+                    this.setPosicaoInicial(gradeX, gradeY);
+                }
+                break;
+            case 'arrastandoFim':
+                if (grade.isWalkableAt(gradeX, gradeY)) {
+                    this.setPosicaoFinal(gradeX, gradeY);
+                }
+                break;
+            case 'desenhandoParede':
+                this.setLiberadoEm(gradeX, gradeY, false);
+                break;
+            case 'apagandoParede':
+                this.setLiberadoEm(gradeX, gradeY, true);
+                break;
         }
     },
-    mouseup: function(event) {
-        if (Controller.can('rest')) {
-            Controller.rest();
+
+    mouseup: function(evento)
+    {
+        if (Controller.can('parado')) {
+            Controller.parado();
         }
     },
-    setButtonStates: function() {
+
+    setEstadoBotoes: function()
+    {
         $.each(arguments, function(i, opt) {
-            var $button = Controller.$buttons.eq(opt.id - 1);
+            var $botao = Controller.$botoes.eq(opt.id - 1);
             if (opt.text) {
-                $button.text(opt.text);
+                $botao.text(opt.text);
             }
             if (opt.callback) {
-                $button
+                $botao
                     .unbind('click')
                     .click(opt.callback);
             }
             if (opt.enabled === undefined) {
                 return;
             } else if (opt.enabled) {
-                $button.removeAttr('disabled');
+                $botao.removeAttr('disabled');
             } else {
-                $button.attr({ disabled: 'disabled' });
+                $botao.attr({ disabled: 'disabled' });
             }
         });
     },
+
     /**
      * When initializing, this method will be called to set the positions
-     * of start node and end node.
+     * of Inicio node and end node.
      * It will detect user's display size, and compute the best positions.
      */
-    setDefaultStartEndPos: function() {
+    setPosicaoInicialFinal: function()
+    {
+        /*
         var width, height,
             marginRight, availWidth,
             centerX, centerY,
@@ -477,43 +572,81 @@ $.extend(Controller, {
 
         centerX = Math.ceil(availWidth / 2 / nodeSize);
         centerY = Math.floor(height / 2 / nodeSize);
+         */
 
-        this.setStartPos(centerX - 5, centerY);
-        this.setEndPos(centerX + 5, centerY);
+        //this.setPosicaoInicial(centerX - 5, centerY);
+        //this.setPosicaoFinal(centerX + 5, centerY);
+        this.setPosicaoInicial(0, 0);
+        this.setPosicaoFinal(1,1);
     },
-    setStartPos: function(gridX, gridY) {
-        this.startX = gridX;
-        this.startY = gridY;
-        View.setStartPos(gridX, gridY);
+
+    setPosicaoInicial: function(gradeX, gradeY)
+    {
+        this.inicioX = gradeX;
+        this.inicioY = gradeY;
+        View.setPosicaoInicial(gradeX, gradeY);
     },
-    setEndPos: function(gridX, gridY) {
-        this.endX = gridX;
-        this.endY = gridY;
-        View.setEndPos(gridX, gridY);
+
+    setPosicaoFinal: function(gradeX, gradeY)
+    {
+        this.finalX = gradeX;
+        this.finalY = gradeY;
+        View.setPosicaoFinal(gradeX, gradeY);
     },
-    setWalkableAt: function(gridX, gridY, walkable) {
-        this.grid.setWalkableAt(gridX, gridY, walkable);
-        View.setAttributeAt(gridX, gridY, 'walkable', walkable);
+
+    setLiberadoEm: function(gradeX, gradeY, liberado)
+    {
+        this.grade.setWalkableAt(gradeX, gradeY, liberado);
+        View.setAtributoEm(gradeX, gradeY, 'liberado', liberado);
     },
-    isStartPos: function(gridX, gridY) {
-        return gridX === this.startX && gridY === this.startY;
+
+    isPosicaoInicial: function(gradeX, gradeY)
+    {
+        return gradeX === this.inicioX && gradeY === this.inicioY;
     },
-    isEndPos: function(gridX, gridY) {
-        return gridX === this.endX && gridY === this.endY;
+
+    isPosicaoFinal: function(gradeX, gradeY)
+    {
+        return gradeX === this.finalX && gradeY === this.finalY;
     },
-    isStartOrEndPos: function(gridX, gridY) {
-        return this.isStartPos(gridX, gridY) || this.isEndPos(gridX, gridY);
+
+    isPosicaoInicialOuFinal: function(gradeX, gradeY)
+    {
+        return this.isPosicaoInicial(gradeX, gradeY) || this.isPosicaoFinal(gradeX, gradeY);
     },
-    printMapa: function() {
+
+    carregarMapa: function(mapa)
+    {
+        let i, j;
+
+        var str = "";
+        for(i=0; i<20; i++) {
+            for (j = 0; j < 45; j++)
+                str += this.mapa1[i][j] + ",";
+
+            str += "\n";
+        }
+        console.log(str);
+
+        for(i=0; i<10; i++)
+            for(j=0; j<30; j++)
+                this.setLiberadoEm(i, j, this.mapa1[i][j]);
+
+    },
+
+    imprimirMapa: function()
+    {
+        let i,j;
         var s = "[";
-        for(var i=0; i<20; i++){
+        for(i=0; i<20; i++){
             s += "[";
-            for(var j=0; j<45; j++){
-                s += ((Controller.grid.nodes[i][j].walkable) ? "1," : "0,");
+            for(j=0; j<45; j++){
+                s += ((Controller.grade.nodes[i][j].walkable) ? "1," : "0,");
             }
             s += "] \n";
         }
         s += "]";
         return s;
     }
+
 });
