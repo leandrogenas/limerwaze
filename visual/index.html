@@ -28,6 +28,12 @@
             });
 
             Controller.inicializacao();
+            Controller.finder = new PF.AStarFinder({
+                allowDiagonal: false,
+                dontCrossCorners: true,
+                heuristic: PF.Heuristic[0],
+                weight: 1
+            });
         })(jQuery)
     </script>
 </body>

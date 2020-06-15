@@ -173,12 +173,11 @@ $.extend(Controller, {
     onbusca: function(estado, de, para)
     {
         var grade,
-            tempoInicio, tempoFinal,
-            finder = Panel.getFinder();
+            tempoInicio, tempoFinal;
 
         tempoInicio = window.performance ? performance.now() : Date.now();
         grade = this.grade.clone();
-        this.caminho = finder.findPath(
+        this.caminho = this.finder.findPath(
             this.inicioX, this.inicioY, this.finalX, this.finalY, grade
         );
         this.qtdOperacoes = this.operacoes.length;
@@ -266,7 +265,7 @@ $.extend(Controller, {
             id: 1,
             text: 'Inicio Busca',
             enabled: true,
-            callback: $.proxy(this.inicio, this),
+            callback: $.proxy(this.comeco, this),
         }, {
             id: 2,
             text: 'pausa Busca',
@@ -280,7 +279,7 @@ $.extend(Controller, {
         // => [Comecando, ArrastandoInicio, ArrastandoFim, drawingStart, drawingEnd]
     },
 
-    oncomecando: function(estado, de, para)
+    oninicio: function(estado, de, para)
     {
         console.log('=> Comecando');
         // Clears any existing Busca progress
@@ -463,7 +462,7 @@ $.extend(Controller, {
 
     gerarGrade: function()
     {
-        this.Grade = new PF.Grid(this.tamGrade[0], this.tamGrade[1]);
+        this.grade = new PF.Grid(this.tamGrade[0], this.tamGrade[1]);
     },
 
     mousedown: function (evento)
