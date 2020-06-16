@@ -12,6 +12,15 @@
         <button id="button3" class="control_button">Clear Walls</button>
     </div>
 
+    <div style="display: flex; justify-content: space-around; box-shadow: #c2e3ff" >
+        <ul id="abertos">
+
+        </ul>
+        <ul id="fechados">
+
+        </ul>
+    </div>
+
     <script src="lib/raphael-min.js"></script>
     <script src="lib/es5-shim.min.js"></script>
     <script src="lib/jquery-1.7.2.min.js"></script>
@@ -31,9 +40,12 @@
             Controller.finder = new PF.AStarFinder({
                 allowDiagonal: false,
                 dontCrossCorners: true,
-                heuristic: PF.Heuristic[0],
+                heuristic: function(dx, dy) {
+                    return Math.sqrt(dx * dx + dy * dy);
+                },
                 weight: 1
             });
+
         })(jQuery)
     </script>
 </body>

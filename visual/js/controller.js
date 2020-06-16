@@ -23,67 +23,67 @@ var Controller = StateMachine.create({
             to:   'pausado'
         },
         {
-            name: 'final',
+            name: 'terminar',
             from: 'buscando',
-            to:   'finalizado'
+            to:   'terminado'
         },
         {
-            name: 'retomado',
+            name: 'continuar',
             from: 'pausado',
             to:   'buscando'
         },
         {
-            name: 'cancelado',
+            name: 'cancelar',
             from: 'pausado',
             to:   'pronto'
         },
         {
             name: 'modificar',
-            from: 'finalizado',
+            from: 'terminado',
             to:   'modificado'
         },
         {
-            name: 'restaurado',
+            name: 'reinicio',
             from: '*',
             to:   'pronto'
         },
         {
-            name: 'limpo',
-            from: ['finalizado', 'modificado'],
+            name: 'limpar',
+            from: ['terminado', 'modificado'],
             to:   'pronto'
         },
         {
-            name: 'comeco',
+            name: 'inicio',
             from: ['pronto', 'modificado', 'reiniciando'],
-            to:   'inicio'
+            to:   'comecando'
         },
         {
             name: 'reiniciar',
-            from: ['buscando', 'finalizado'],
+            from: ['buscando', 'terminado'],
             to:   'reiniciando'
         },
         {
-            name: 'arrastaInicio',
-            from: ['pronto', 'finalizado'],
+            name: 'arrastarInicio',
+            from: ['pronto', 'terminado'],
             to:   'arrastandoInicio'
         },
         {
-            name: 'arrastaFim',
-            from: ['pronto', 'finalizado'],
+            name: 'arrastarFim',
+            from: ['pronto', 'terminado'],
             to:   'arrastandoFim'
         },
         {
-            name: 'desenhaParede',
-            from: ['pronto', 'finalizado'],
+            name: 'desenharParede',
+            from: ['pronto', 'terminado'],
             to:   'desenhandoParede'
         },
         {
-            name: 'apagaParede',
-            from: ['pronto', 'finalizado'],
+            name: 'apagarParede',
+            from: ['pronto', 'terminado'],
             to:   'apagandoParede'
         },
         {
-            name: 'parado',
+            name: 'descansar',
             from: ['arrastandoInicio', 'arrastandoFim', 'desenhandoParede', 'apagandoParede'],
             to  : 'pronto'
         },
@@ -91,27 +91,73 @@ var Controller = StateMachine.create({
 });
 
 $.extend(Controller, {
-    mapa1: [
-        [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0],
-        [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
-        [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
-        [0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
-        [0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
-        [1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
-        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
-        [0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0],
-        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1],
-        [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
-        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
-        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0],
-        [0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1],
-        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,0,0,1,0,0],
-        [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0],
-        [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0]
+    mapas: [
+        [
+            [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0],
+            [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+            [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+            [0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+            [0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+            [1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+            [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,1,0],
+            [0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0],
+            [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1],
+            [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+            [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
+            [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0],
+            [0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1],
+            [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,0,0,1,0,0],
+            [0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0],
+            [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0]
+        ],
+        [
+            [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0],
+            [0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0],
+            [0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,1,0,0,0,1,1,1,0],
+            [0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,1,0],
+            [0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,1,1,1,0],
+            [0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,1,0],
+            [0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,1,1,1,1,1,1,1,0],
+            [0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,1,0],
+            [0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0],
+            [0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0],
+            [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0],
+            [0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0],
+            [0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,1,1,1,1,1,1,1,0],
+            [0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,1,1,1,0,0,0,0,0,1,0],
+            [0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0],
+            [0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,0],
+            [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0],
+            [0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0],
+            [0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0],
+            [0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1,0,1,0,0]
+        ],
+        [
+            [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0],
+            [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0],
+            [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,1,0,0,0,1,0,0],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0],
+            [1,1,1,1,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0],
+            [0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0],
+            [0,1,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0],
+            [0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0],
+            [0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0],
+            [0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0],
+            [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+            [0,1,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0],
+            [0,1,0,0,1,0,0,1,1,1,1,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0],
+            [0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0],
+            [0,1,0,0,1,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0],
+            [0,1,1,1,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1],
+            [0,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+            [0,1,1,1,1,1,1,1,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+        ]
     ],
 
     tamGrade: [45, 20], // number of nodes horizontally and vertically
@@ -131,7 +177,7 @@ $.extend(Controller, {
     tempoTotal: 0,
 
     /**
-     * Asynchronous transition from `none` state to `Pronto` state.
+     * Asynchronous transition from `nada` state to `Pronto` state.
      */
     onleavenada: function(estado, de, para)
     {
@@ -148,7 +194,7 @@ $.extend(Controller, {
         View.gerarGrade(function() {
             Controller.setPosicaoInicialFinal();
             Controller.bindEventos();
-            //Controller.carregarMapa(null);
+            Controller.carregarMapa(null);
             Controller.transition(); // Vai para o proximo estado (Pronto)
         });
 
@@ -158,13 +204,13 @@ $.extend(Controller, {
         // => Pronto
     },
 
-    ondesenhaParede: function(estado, de, para, gradeX, gradeY)
+    ondesenharParede: function(estado, de, para, gradeX, gradeY)
     {
         this.setLiberadoEm(gradeX, gradeY, false);
         // => DesenhandoParede
     },
 
-    onapagaParede: function(estado, de, para, gradeX, gradeY)
+    onapagarParede: function(estado, de, para, gradeX, gradeY)
     {
         this.setLiberadoEm(gradeX, gradeY, true);
         // => ApagandoParede
@@ -208,31 +254,33 @@ $.extend(Controller, {
         // => pausado
     },
 
-    onresume: function(estado, de, para)
+    oncontinuar: function(estado, de, para)
     {
         this.loop();
         // => buscando
     },
 
-    oncancel: function(estado, de, para)
+    oncancelar: function(estado, de, para)
     {
         this.limparOperacoes();
         this.limparPassos();
         // => Pronto
     },
 
-    onfinish: function(estado, from, to)
+    onterminar: function(estado, from, to)
     {
+        /*
         View.mostrarStats({
             pathLength: PF.Util.pathLength(this.path),
             timeSpent:  this.timeSpent,
             operationCount: this.operationCount,
         });
-        View.desenharCaminho(this.path);
+         */
+        View.desenharCaminho(this.caminho);
         // => finalizado
     },
 
-    onclear: function(estado, from, to)
+    onlimpar: function(estado, from, to)
     {
         this.limparOperacoes();
         this.limparPassos();
@@ -244,7 +292,7 @@ $.extend(Controller, {
         // => modificado
     },
 
-    onreset: function(estado, de, para)
+    onreinicio: function(estado, de, para)
     {
         setTimeout(function() {
             Controller.limparOperacoes();
@@ -263,23 +311,23 @@ $.extend(Controller, {
         console.log('=> Pronto');
         this.setEstadoBotoes({
             id: 1,
-            text: 'Inicio Busca',
+            text: 'Iniciar busca',
             enabled: true,
-            callback: $.proxy(this.comeco, this),
+            callback: $.proxy(this.inicio, this),
         }, {
             id: 2,
-            text: 'pausa Busca',
+            text: 'Pausar busca',
             enabled: false,
         }, {
             id: 3,
-            text: 'limpa Walls',
+            text: 'Limpar paredes',
             enabled: true,
-            callback: $.proxy(this.reset, this),
+            callback: $.proxy(this.reinicio, this),
         });
         // => [Comecando, ArrastandoInicio, ArrastandoFim, drawingStart, drawingEnd]
     },
 
-    oninicio: function(estado, de, para)
+    oncomecando: function(estado, de, para)
     {
         console.log('=> Comecando');
         // Clears any existing Busca progress
@@ -297,12 +345,12 @@ $.extend(Controller, {
         console.log('=> buscando');
         this.setEstadoBotoes({
             id: 1,
-            text: 'reiniciar Busca',
+            text: 'Reiniciar busca',
             enabled: true,
-            callback: $.proxy(this.reiniciar, this),
+            callback: $.proxy(this.reinicio, this),
         }, {
             id: 2,
-            text: 'pausa Busca',
+            text: 'Pausar busca',
             enabled: true,
             callback: $.proxy(this.pausa, this),
         });
@@ -314,32 +362,43 @@ $.extend(Controller, {
         console.log('=> pausado');
         this.setEstadoBotoes({
             id: 1,
-            text: 'Resume Busca',
+            text: 'Continuar busca',
             enabled: true,
             callback: $.proxy(this.resume, this),
         }, {
             id: 2,
-            text: 'Cancel Busca',
+            text: 'Cancelar busca',
             enabled: true,
             callback: $.proxy(this.cancel, this),
         });
         // => [buscando, Pronto]
     },
 
-    onfinalizado: function(estado, de, para)
+    onterminado: function(estado, de, para)
     {
         console.log('=> finalizado');
         this.setEstadoBotoes({
             id: 1,
-            text: 'reiniciar Busca',
+            text: 'Reiniciar busca',
             enabled: true,
             callback: $.proxy(this.reiniciar, this),
         }, {
             id: 2,
-            text: 'limpa Path',
+            text: 'Limpar caminho',
             enabled: true,
             callback: $.proxy(this.limpa, this),
         });
+
+        let abertos = []
+        let fechados = [];
+        $.map(this.porratoda, function(node, i){
+            if(node.aberto)
+                $("#abertos").append("<li>X:" + node.x + ", Y:" + node.y);
+            else
+                $("#fechados").append("<li>X:" + node.x + ", Y:" + node.y);
+        });
+
+
     },
 
     onmodificado: function(estado, de, para)
@@ -347,12 +406,12 @@ $.extend(Controller, {
         console.log('=> modificado');
         this.setEstadoBotoes({
             id: 1,
-            text: 'Inicio Busca',
+            text: 'Iniciar busca',
             enabled: true,
-            callback: $.proxy(this.Inicio, this),
+            callback: $.proxy(this.inicio, this),
         }, {
             id: 2,
-            text: 'limpa Path',
+            text: 'Limpar caminho',
             enabled: true,
             callback: $.proxy(this.limpa, this),
         });
@@ -362,13 +421,15 @@ $.extend(Controller, {
      * Define setters and getters of PF.Node, then we can get the operations
      * of the pathfinding.
      */
+    porratoda: [],
+
     hookPathFinding: function() {
 
         PF.Node.prototype = {
-            get aberto() {
+            get opened() {
                 return this._aberto;
             },
-            set aberto(v) {
+            set opened(v) {
                 this._aberto = v;
                 Controller.operacoes.push({
                     x: this.x,
@@ -376,11 +437,12 @@ $.extend(Controller, {
                     attr: 'aberto',
                     valor: v
                 });
+                Controller.porratoda.push({x: this.x, y: this.y, aberto: true})
             },
-            get fechado() {
+            get closed() {
                 return this._fechado;
             },
-            set fechado(v) {
+            set closed(v) {
                 this._fechado = v;
                 Controller.operacoes.push({
                     x: this.x,
@@ -388,11 +450,12 @@ $.extend(Controller, {
                     attr: 'fechado',
                     valor: v
                 });
+                Controller.porratoda.push({x: this.x, y: this.y, aberto: false})
             },
-            get testado() {
+            get tested() {
                 return this._testado;
             },
-            set testado(v) {
+            set tested(v) {
                 this._testado = v;
                 Controller.operacoes.push({
                     x: this.x,
@@ -433,7 +496,7 @@ $.extend(Controller, {
 
         do {
             if (!operacoes.length) {
-                this.final(); // transit to `finalizado` state
+                this.terminar(); // transit to `finalizado` state
                 return;
             }
             op = operacoes.shift();
@@ -472,20 +535,20 @@ $.extend(Controller, {
             gradeY = coord[1],
             grade  = this.grade;
 
-        if (this.can('arrastaInicio') && this.isPosicaoInicial(gradeX, gradeY)) {
-            this.arrastaInicio();
+        if (this.can('arrastarInicio') && this.isPosicaoInicial(gradeX, gradeY)) {
+            this.arrastarInicio();
             return;
         }
-        if (this.can('arrastaFim') && this.isPosicaoFinal(gradeX, gradeY)) {
-            this.arrastaFim();
+        if (this.can('arrastarFim') && this.isPosicaoFinal(gradeX, gradeY)) {
+            this.arrastarFim();
             return;
         }
-        if (this.can('desenhaParede') && grade.isWalkableAt(gradeX, gradeY)) {
-            this.desenhaParede(gradeX, gradeY);
+        if (this.can('desenharParede') && grade.isWalkableAt(gradeX, gradeY)) {
+            this.desenharParede(gradeX, gradeY);
             return;
         }
-        if (this.can('apagaParede') && !grade.isWalkableAt(gradeX, gradeY)) {
-            this.apagaParede(gradeX, gradeY);
+        if (this.can('apagarParede') && !grade.isWalkableAt(gradeX, gradeY)) {
+            this.apagarParede(gradeX, gradeY);
         }
     },
 
@@ -522,8 +585,8 @@ $.extend(Controller, {
 
     mouseup: function(evento)
     {
-        if (Controller.can('parado')) {
-            Controller.parado();
+        if (Controller.can('descansar')) {
+            Controller.descansar();
         }
     },
 
@@ -575,8 +638,15 @@ $.extend(Controller, {
 
         //this.setPosicaoInicial(centerX - 5, centerY);
         //this.setPosicaoFinal(centerX + 5, centerY);
-        this.setPosicaoInicial(0, 0);
-        this.setPosicaoFinal(1,1);
+
+        //this.setPosicaoInicial(0, 3);
+        //this.setPosicaoFinal(44,17);
+
+        // this.setPosicaoInicial(1, 15);
+        // this.setPosicaoFinal(25,0);
+
+        this.setPosicaoInicial(1, 15);
+        this.setPosicaoFinal(37,17);
     },
 
     setPosicaoInicial: function(gradeX, gradeY)
@@ -595,7 +665,7 @@ $.extend(Controller, {
 
     setLiberadoEm: function(gradeX, gradeY, liberado)
     {
-        this.grade.setWalkableAt(gradeX, gradeY, liberado);
+        //this.grade.setWalkableAt(gradeX, gradeY, liberado);
         View.setAtributoEm(gradeX, gradeY, 'liberado', liberado);
     },
 
@@ -614,22 +684,17 @@ $.extend(Controller, {
         return this.isPosicaoInicial(gradeX, gradeY) || this.isPosicaoFinal(gradeX, gradeY);
     },
 
-    carregarMapa: function(mapa)
+    carregarMapa: function(nego)
     {
+        let mapa = this.mapas[2];
+
         let i, j;
-
-        var str = "";
         for(i=0; i<20; i++) {
-            for (j = 0; j < 45; j++)
-                str += this.mapa1[i][j] + ",";
-
-            str += "\n";
+            for (j = 0; j < 45; j++) {
+                this.grade.nodes[i][j].walkable = mapa[i][j];
+                this.setLiberadoEm(j, i, mapa[i][j]);
+            }
         }
-        console.log(str);
-
-        for(i=0; i<10; i++)
-            for(j=0; j<30; j++)
-                this.setLiberadoEm(i, j, this.mapa1[i][j]);
 
     },
 

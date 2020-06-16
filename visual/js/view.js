@@ -21,9 +21,9 @@ var View = {
             'stroke-opacity': 0.2,
         },
         aberto: {
-            fill: '#98fb98',
+            fill: 'rgba(169,64,179,0.93)',
             'stroke-opacity': 0.2,
-        },
+        },   
         fechado: {
             fill: '#afeeee',
             'stroke-opacity': 0.2,
@@ -245,7 +245,7 @@ var View = {
     limparPassos: function() 
     {
         var i, x, y, coord, coords = this.getCoordsSujas();
-        for (i = 0; i < coords.comprimento; ++i) {
+        for (i = 0; i < coords.length; ++i) {
             coord = coords[i];
             x = coord[0];
             y = coord[1];
@@ -272,10 +272,10 @@ var View = {
     
     desenharCaminho: function(caminho) 
     {
-        if (!caminho.comprimento) {
+        if (!caminho.length) {
             return;
         }
-        var svgPath = this.montarCaminhoSVG(path);
+        var svgPath = this.montarCaminhoSVG(caminho);
         this.caminho = this.papel.path(svgPath).attr(this.estiloCaminho);
     },
     
@@ -286,11 +286,11 @@ var View = {
     {
         var i, strs = [], size = this.tamanhoNode;
 
-        strs.push('M' + (path[0][0] * size + size / 2) + ' ' +
-                  (path[0][1] * size + size / 2));
-        for (i = 1; i < caminho.comprimento; ++i) {
-            strs.push('L' + (path[i][0] * size + size / 2) + ' ' +
-                      (path[i][1] * size + size / 2));
+        strs.push('M' + (caminho[0][0] * size + size / 2) + ' ' +
+                  (caminho[0][1] * size + size / 2));
+        for (i = 1; i < caminho.length; ++i) {
+            strs.push('L' + (caminho[i][0] * size + size / 2) + ' ' +
+                      (caminho[i][1] * size + size / 2));
         }
 
         return strs.join('');
