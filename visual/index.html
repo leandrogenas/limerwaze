@@ -1,8 +1,25 @@
 <!DOCTYPE html>
 <head>
+    <meta charset="UTF-8" />
+    <title>Trabalho IA</title>
 
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+        }
+
+        #lista_nodes{
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #lista_nodes h4{
+            display: inline;
+        }
+    </style>
 </head>
 <body>
+
 
     <div id="area_desenho"></div>
 
@@ -12,12 +29,13 @@
         <button id="button3" class="control_button">Limpar paredes</button>
     </div>
 
-    <div style="display: flex; justify-content: space-around; box-shadow: #c2e3ff" >
+    <div id="lista_nodes">
         <ul id="abertos">
+            <h4>Nós abertos:</h4>
 
         </ul>
         <ul id="fechados">
-
+            <h4>Nós fechados:</h4>
         </ul>
     </div>
 
@@ -41,7 +59,7 @@
                 allowDiagonal: false,
                 dontCrossCorners: true,
                 heuristic: function(dx, dy) {
-                    return (dx * dx + dy * dy);
+                    return dx + dy;
                 },
                 weight: 1
             });

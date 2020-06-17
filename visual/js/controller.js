@@ -238,10 +238,13 @@ $.extend(Controller, {
         this.grade = new PF.Grid(numCol, numLin);
         this.$botoes = $('.control_button');
 
+        // Inicializa a view
         View.inicializar({
             numCol: numCol,
             numLin: numLin
         });
+
+        // Gera a visualização da grade
         View.gerarGrade(function() {
             Controller.setPosicaoInicialFinal();
             Controller.bindEventos();
@@ -249,102 +252,16 @@ $.extend(Controller, {
             Controller.transition(); // Vai para o proximo estado (Pronto)
         });
 
+        // Atrela propriedades extras à classe de nó
         this.hookPathFinding();
 
         return StateMachine.ASYNC;
     },
 
-    /** Acionado quando uma parede precisa ser desenhada
-     * Define o ponto selecionado como parede
+    /** Acionada quando o estado está em pronto
+     * Irá definir o estado inicial dos botões e as
+     * suas respectivas funções de callback
      */
-    ondesenharParede: function(estado, de, para, gradeX, gradeY)
-    {
-        console.log(" C> [DesenharParede]");
-        this.setLiberadoEm(gradeX, gradeY, false);
-    },
-
-    ondesenhandoParede: function()
-    {
-        console.log(" C> [DesenhandoParede]");
-    },
-
-    onapagarParede: function(estado, de, para, gradeX, gradeY)
-    {
-        console.log(" C> [ApagarParede]")
-        this.setLiberadoEm(gradeX, gradeY, true);
-    },
-
-    onapagandoParede: function()
-    {
-        console.log(" C> [ApagandoParede]");
-    },
-
-    onbusca: function(estado, de, para)
-    {
-        console.log(" C> [Busca]");
-        this.caminho = this.finder.findPath(
-            this.inicioX, this.inicioY, this.finalX, this.finalY, this.grade.clone()
-        );
-        this.loop();
-    },
-
-    onreinicio: function()
-    {
-        console.log(" C> [Reinicio]");
-        setTimeout(function() {
-            Controller.limparOperacoes();
-            Controller.limparPassos();
-            Controller.inicio();
-        }, View.efeitoColorirNode.duration * 1.2);
-    },
-
-    onpausa: function(estado, de, para)
-    {
-        console.log(" C> [Pausa]");
-    },
-
-    oncontinuar: function(estado, de, para)
-    {
-        console.log(" C> [Continuar]");
-        this.loop();
-    },
-
-    oncancelar: function(estado, de, para)
-    {
-        console.log(" C> [Cancelar]");
-        this.limparOperacoes();
-        this.limparPassos();
-
-    },
-
-    onterminar: function(estado, from, to)
-    {
-        console.log(" C> [Terminar]");
-        View.desenharCaminho(this.caminho);
-    },
-
-    onlimpar: function(estado, from, to)
-    {
-        console.log(" C> [Limpar]");
-        this.limparOperacoes();
-        this.limparPassos();
-    },
-
-    onmodificar: function(estado, de, para)
-    {
-        console.log(" C> [Modificar]");
-    },
-
-    onreinicio: function(estado, de, para)
-    {
-        console.log(" C> [Reinicio]");
-        setTimeout(function() {
-            Controller.limparOperacoes();
-            Controller.limparTudo();
-            Controller.gerarGrade();
-        }, View.efeitoColorirNode.duration * 1.2);
-    },
-
     onpronto: function(estado, de, para)
     {
         console.log(' C> [Pronto]');
@@ -366,6 +283,121 @@ $.extend(Controller, {
 
     },
 
+    /** Acionado quando uma parede precisa ser desenhada
+     * Define o ponto selecionado como bloqueado
+     */
+    ondesenharParede: function(estado, de, para, gradeX, gradeY)
+    {
+        console.log(" C> [DesenharParede]");
+        this.setLiberadoEm(gradeX, gradeY, false);
+    },
+
+    ondesenhandoParede: function()
+    {
+        console.log(" C> [DesenhandoParede]");
+    },
+
+    /** Acionado quando uma parede precisa ser apagada
+     * Define o ponto selecionado como liberado
+     */
+    onapagarParede: function(estado, de, para, gradeX, gradeY)
+    {
+        console.log(" C> [ApagarParede]")
+        this.setLiberadoEm(gradeX, gradeY, true);
+    },
+
+    onapagandoParede: function()
+    {
+        console.log(" C> [ApagandoParede]");
+    },
+
+    /** Acionado quando a busca é iniciada
+     * Irá definir o algoritmo de busca e iniciar
+     * o loop de busca
+     */
+    onbusca: function(estado, de, para)
+    {
+        console.log(" C> [Busca]");
+        this.caminho = this.finder.findPath(
+            this.inicioX, this.inicioY, this.finalX, this.finalY, this.grade.clone()
+        );
+        this.loop();
+    },
+
+
+    /** Acionada ao reiniciar a busca
+     * Limpa todas as operações, passos e reinicia
+     * o controlador
+     */
+    onreinicio: function()
+    {
+        console.log(" C> [Reinicio]");
+        setTimeout(function() {
+            Controller.limparOperacoes();
+            Controller.limparPassos();
+            Controller.inicio();
+        }, View.efeitoColorirNode.duration * 1.2);
+    },
+
+    /** Acionada ao pausar a busca
+     *
+     */
+    onpausa: function(estado, de, para)
+    {
+        console.log(" C> [Pausa]");
+    },
+
+    /** Acionada ao continuar a busca
+     *
+     */
+    oncontinuar: function(estado, de, para)
+    {
+        console.log(" C> [Continuar]");
+        this.loop();
+    },
+
+    /** Acionada ao cancelar a busca
+     * Limpa as operações e passos
+     */
+    oncancelar: function(estado, de, para)
+    {
+        console.log(" C> [Cancelar]");
+        this.limparOperacoes();
+        this.limparPassos();
+
+    },
+
+    /** Acionada ao terminar a busca
+     * Irá desenhar o caminho do início ao fim
+     */
+    onterminar: function(estado, de, para)
+    {
+        console.log(" C> [Terminar]");
+        View.desenharCaminho(this.caminho);
+    },
+
+    /** Acionada ao limpar a grade
+     * Irá limpar as operações e os passos
+     */
+    onlimpar: function(estado, de, para)
+    {
+        console.log(" C> [Limpar]");
+        this.limparOperacoes();
+        this.limparPassos();
+    },
+
+    /** Acionada ao modificar algum node da grade
+     *
+     */
+    onmodificar: function(estado, de, para)
+    {
+        console.log(" C> [Modificar]");
+    },
+
+    /** Acionada ao início da busca
+     * Irá limpar passos anteriores, liberar o botão de
+     * pausa da busca e transicionar para o estado de busca
+     */
     oncomecando: function(estado, de, para)
     {
         console.log(' C> [Comecando]');
@@ -378,6 +410,10 @@ $.extend(Controller, {
 
     },
 
+    /** Acionada ao buscar
+     * Irá definir os estados dos botões de acordo com as opções
+     * disponíveis ao estar buscando
+     */
     onbuscando: function(estado, de, para)
     {
         console.log(' C> [Buscando]');
@@ -394,6 +430,10 @@ $.extend(Controller, {
         });
     },
 
+    /** Acionada ao pausar a busca
+     * Irá definir os estados dos botões de acordo
+     * com o estado pausado da busca
+     */
     onpausado: function(estado, de, para)
     {
         console.log('C> [Pausado]');
@@ -410,6 +450,9 @@ $.extend(Controller, {
         });
     },
 
+    /** Acionado ao finalizar a busca
+     * Irá reiniciar os estados dos botões para o seu original
+     */
     onterminado: function(estado, de, para)
     {
         console.log(' C> [Finalizado]');
@@ -428,6 +471,11 @@ $.extend(Controller, {
 
     },
 
+    /** Acionado quando algo é modificado na grade
+     * Irá definir o estado dos botões como o inicial,
+     * apenas permitindo iniciar a busca e limpar o caminho
+     * anteriormente desenhado
+     */
     onmodificado: function(estado, de, para)
     {
         console.log(' C> [Modificado]');
@@ -444,6 +492,9 @@ $.extend(Controller, {
         });
     },
 
+    /** Função que irá atrelar funções extras ao nó do Pathfinding.js,
+     * permitindo o acesso dos nós abertos, fechados e testados
+     */
     hookPathFinding: function() {
         console.log(" C> Configurando o pathfinder");
         PF.Node.prototype = {
@@ -488,6 +539,9 @@ $.extend(Controller, {
         this.operacoes = [];
     },
 
+    /** Atrela os eventos de cursor ao controlador,
+     * para os seus tratamentos
+     */
     bindEventos: function()
     {
         console.log(" C> Definindo eventos");
@@ -497,6 +551,9 @@ $.extend(Controller, {
             .mouseup($.proxy(this.mouseup, this));
     },
 
+    /** Função que desenha a busca iterativamente,
+     * de acordo com a velocidade definida
+     */
     loop: function()
     {
         console.log(" C> Loop");
@@ -510,6 +567,9 @@ $.extend(Controller, {
         })();
     },
 
+    /** Representa cada 'passo' que o algoritmo faz para
+     * chegar ao destino, e desenha isso na grade
+     */
     passo: function()
     {
         console.log(" C> Passo");
@@ -533,12 +593,18 @@ $.extend(Controller, {
         View.setAtributoEm(op.x, op.y, op.attr, op.valor);
     },
 
+    /** Limpa o vetor de operações
+     *
+     */
     limparOperacoes: function()
     {
         console.log(" C> Limpando operações");
         this.operacoes = [];
     },
 
+    /** Limpa os passos e caminho já desenhado
+     * anteriormente pelo código, se houver.
+     */
     limparPassos: function()
     {
         console.log(" C> Limpando passos");
@@ -546,18 +612,30 @@ $.extend(Controller, {
         View.limparCaminho();
     },
 
+    /** Limpa tudo da tela, incluindo caminhos, passos
+     * e nós bloqueados
+     */
     limparTudo: function()
     {
         this.limparPassos();
         View.limparNodesBloqueados();
     },
 
+    /** Cria a representação da grade
+     *
+     */
     gerarGrade: function()
     {
         console.log(" C> Gerando a representação da grade");
         this.grade = new PF.Grid(this.tamGrade[0], this.tamGrade[1]);
     },
 
+    /** Evento de tratamento quando houver algum clique na grade
+     * Irá testar o estado atual do algoritmo e agir de acordo
+     * com o que o usuário deseja, seja isso arrastar, colocar ou
+     * tirar uma parede, arrastar os pontos iniciais e finais ou
+     * qualquer outro evento de clique
+     */
     mousedown: function (evento)
     {
         console.log(" C> Clicado");
@@ -583,6 +661,11 @@ $.extend(Controller, {
         }
     },
 
+    /** Evento de tratamento quando o mouse foi movido na tela
+     * Irá tratar o movimento do mouse, para as ações que exigem
+     * isso, como arrastar os pontos iniciais ou finais ou desenhar
+     * a parede
+     */
     mousemove: function(evento)
     {
         var coord = View.toGridCoordinate(evento.pageX, evento.pageY),
@@ -614,6 +697,12 @@ $.extend(Controller, {
         }
     },
 
+    /** Evento de tratamento quando o mouse parou de disparar o evento
+     * de clique.
+     * Irá parar qualquer ação que esteja sendo executada no momento,
+     * e irá transicionar para o estado de descanso, para partir para o pronto
+     * novamente
+     */
     mouseup: function(evento)
     {
         console.log(" C> Botão solto");
@@ -622,6 +711,9 @@ $.extend(Controller, {
         }
     },
 
+    /** Define os estados dos botões de acordo com os parâmetros
+     * informados, para controle de entrada do usuário
+     */
     setEstadoBotoes: function()
     {
         console.log(" C> Definindo estado dos botões");
@@ -645,12 +737,18 @@ $.extend(Controller, {
         });
     },
 
+    /** Define a posição inicial e final
+     *
+     */
     setPosicaoInicialFinal: function()
     {
         this.setPosicaoInicial(1, 15);
         this.setPosicaoFinal(37,17);
     },
 
+    /** Define a posição inicial
+     *
+     */
     setPosicaoInicial: function(gradeX, gradeY)
     {
         console.log(" C> Definindo posição inicial");
@@ -659,6 +757,9 @@ $.extend(Controller, {
         View.setPosicaoInicial(gradeX, gradeY);
     },
 
+    /** Define a posição final
+     *
+     */
     setPosicaoFinal: function(gradeX, gradeY)
     {
         console.log(" C> Definindo posição final");
@@ -667,6 +768,9 @@ $.extend(Controller, {
         View.setPosicaoFinal(gradeX, gradeY);
     },
 
+    /** Define algum ponto como sendo liberado ou não,
+     * atualizando a view de maneira adequada
+     */
     setLiberadoEm: function(gradeX, gradeY, liberado)
     {
         console.log(" C> Definindo nó {"+gradeX+","+gradeY+"} como "+((liberado) ? "liberado" : "bloqueado"));
@@ -674,21 +778,33 @@ $.extend(Controller, {
         View.setAtributoEm(gradeX, gradeY, 'liberado', liberado);
     },
 
+    /** Retorna se a posição informada é a inicial
+     *
+     */
     isPosicaoInicial: function(gradeX, gradeY)
     {
         return gradeX === this.inicioX && gradeY === this.inicioY;
     },
 
+    /** Retorna se a posição informada é a final
+     *
+     */
     isPosicaoFinal: function(gradeX, gradeY)
     {
         return gradeX === this.finalX && gradeY === this.finalY;
     },
 
+    /** Retorna se a posição informada é a inicial ou final
+     *
+     */
     isPosicaoInicialOuFinal: function(gradeX, gradeY)
     {
         return this.isPosicaoInicial(gradeX, gradeY) || this.isPosicaoFinal(gradeX, gradeY);
     },
 
+    /** Carrega um mapa pré definido e define suas posições de parede
+     * e liberados
+     */
     carregarMapa: function(idxMapa)
     {
         console.log(" C> Carregando mapa");
@@ -704,13 +820,16 @@ $.extend(Controller, {
 
     },
 
+    /** Constrói uma representação de vetor a partir do estado
+     * atual da grade, e retorna como string
+     */
     imprimirMapa: function()
     {
         let i,j;
         var s = "[";
-        for(i=0; i<20; i++){
+        for(i=0; i<this.tamGrade[1]; i++){
             s += "[";
-            for(j=0; j<45; j++){
+            for(j=0; j<this.tamGrade[0]; j++){
                 s += ((Controller.grade.nodes[i][j].walkable) ? "1," : "0,");
             }
             s += "] \n";

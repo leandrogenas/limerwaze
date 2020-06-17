@@ -46,12 +46,13 @@ function Grid(width_or_matrix, height, matrix) {
  *     the walkable status of the nodes.
  * @see Grid
  */
-Grid.prototype._buildNodes = function(width, height, matrix) {
+Grid.prototype._buildNodes = function(altura, largura, matrix) {
+
     var i, j,
         nodes = new Array(height);
 
-    for (i = 0; i < height; ++i) {
-        nodes[i] = new Array(width);
+    for (i = 0; i < altura; ++i) {
+        nodes[i] = new Array(largura);
         for (j = 0; j < width; ++j) {
             nodes[i][j] = new Node(j, i);
         }

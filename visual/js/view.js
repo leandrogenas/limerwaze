@@ -3,6 +3,8 @@
  * It uses raphael.js to show the grids.
  */
 var View = {
+
+    // Definição de estilos de cada tipo de nó
     estiloNode: {
         normal: {
             fill: 'white',
@@ -38,46 +40,60 @@ var View = {
         },
     },
 
+    // Definições de propriedade da ação de colorir
     efeitoColorirNode: {
         duracao: 50,
     },
 
+    // Definições de propriedade da ação de zoom
     efeitoZoomNode: {
         duracao: 200,
         transform: 's1.2', // escala 1.2x
         transformBack: 's1.0',
     },
 
+    // Estilo do caminho desenhado
     estiloCaminho: {
         stroke: 'yellow',
         'stroke-width': 3,
     },
 
-    $status: null,
+    // Representação dos quadrados
     rects: null,
+
+    // Número total de linhas e colunas
     numCol: 0,
-    nulLin: 0,
+    numLin: 0,
+
+    // Representação da área de desenho
     papel: null,
+
+    // Tamanho em px do quadrado
     tamanhoNode: 30,
+
+    // Lista de nós bloqueados
     nodesBloqueados: null,
+
+    // Nós inicial e final
     nodeInicial: null,
     nodeFinal: null,
+
+    // Operações suportadas de busca
     opsSuportadas: ['aberto', 'fechado', 'testado'],
 
+    /** Inicializa a View e define as propriedades iniciais
+     *
+     */
     inicializar: function(opcoes)
     {
         console.log(" V> Inicializando");
         this.numCol      = opcoes.numCol;
         this.numLin      = opcoes.numLin;
         this.papel        = Raphael('area_desenho');
-        this.$status       = $('#status');
     },
 
-    /**
-     * Generate the grade asynchronously. Gerar grade assincrono
-     * This method will be a very expensive task.
-     * Therefore, in order to not to block the rfimering of browser ui,
-     * I decomposed the task into smaller ones. Each will only generate a linha. Tarefas decompostas em menores, que irão gerar apenas uma linha
+    /** Gera a grade linha por linha, sendo quebrado em 'tasks' que
+     * irão fazer o trabalho de desenhar
      */
     gerarGrade: function(callback)
     {
@@ -90,11 +106,12 @@ var View = {
             numCol       = this.numCol,
             numLin       = this.numLin,
             papel        = this.papel,
-            rects        = this.rects = [],
-            $stats       = this.$status;
+            rects        = this.rects = [];
 
+        // Tamanho da área de desenho
         papel.setSize(numCol * tamanhoNode, numLin * tamanhoNode);
 
+        // Task de criar a linha
         criarLinha = function(idxLinha) {
             return function(done) {
                 rects[idxLinha] = [];
@@ -106,10 +123,6 @@ var View = {
                     rect.attr(estiloNormal);
                     rects[idxLinha].push(rect);
                 }
-                $stats.text(
-                    'gerando grade ' +
-                    Math.round((idxLinha + 1) / numLin * 100) + '%'
-                );
                 done(null);
             };
         };
@@ -134,6 +147,9 @@ var View = {
 
     },
 
+    /** Define a posição inicial e pinta-o
+     * da cor correspondente (vermelho)
+     */
     setPosicaoInicial: function(gradeX, gradeY)
     {
         console.log(" V> Definindo posição inicial");
@@ -151,6 +167,9 @@ var View = {
         }
     },
 
+    /** Define a posição final e pinta-o
+     * da cor correspondente (verde)
+     */
     setPosicaoFinal: function(gradeX, gradeY)
     {
         console.log(" V> Definindo posição final");
@@ -168,8 +187,9 @@ var View = {
         }
     },
 
-    /**
-     * Set the attribute of the node at the given coordinate. Set atributo do node pela coordenada
+    /** Define o atributo de um nó em uma dada coordenada, de acordo
+     * com suas propriedades, atribuindo estilos diferentes à ele,
+     * como cor e traçado
      */
     setAtributoEm: function(gradeX, gradeY, attr, valor)
     {
@@ -194,18 +214,23 @@ var View = {
             this.setCoordSuja(gradeX, gradeY, true);
             break;
         default:
-            console.error('unsupported operation: ' + attr + ':' + valor);
             return;
         }
     },
 
+    /** Colore o nó informado de acordo com
+     * a cor desejada
+     */
     colorirNode: function(node, cor)
     {
         node.animate({
             fill: cor
         }, this.efeitoColorirNode.duracao);
     },
-    
+
+    /** Dá um efeito de zoom no nó selecionado
+     *
+     */
     zoomNo: function(node) 
     {
         node.toFront().attr({
@@ -214,10 +239,13 @@ var View = {
             transform: this.efeitoZoomNode.transformBack,
         }, this.efeitoZoomNode.duracao);
     },
-    
+
+    /** Define o nó em uma dada coordenada como liberado ou não,
+     * aplicando os efeitos de transição e mudando suas cores
+     * de acordo com o seu estado
+     */
     setLiberadoEm: function(gradeX, gradeY, valor) 
     {
-        console.log(" V> Definindo o node {"+gradeX+","+gradeY+"} como "+((valor) ? "liberado" : "bloqueado"));
         var node, i, nodesBloqueados = this.nodesBloqueados;
         if (!nodesBloqueados) {
             nodesBloqueados = this.nodesBloqueados = new Array(this.numLin);
@@ -246,7 +274,10 @@ var View = {
             this.zoomNo(node);
         }
     },
-    
+
+    /** Limpa os passos (nós abertos e fechados) da grade
+     *
+     */
     limparPassos: function() 
     {
         var i, x, y, coord, coords = this.getCoordsSujas();
@@ -258,7 +289,10 @@ var View = {
             this.setCoordSuja(x, y, false);
         }
     },
-    
+
+    /** Limpa os nós do tipo parede da grade
+     *
+     */
     limparNodesBloqueados: function() 
     {
         var i, j, nodesBloqueados = this.nodesBloqueados;
@@ -274,7 +308,10 @@ var View = {
             }
         }
     },
-    
+
+    /** Desenha o caminho
+     *
+     */
     desenharCaminho: function(caminho) 
     {
         if (!caminho.length) {
@@ -300,7 +337,10 @@ var View = {
 
         return strs.join('');
     },
-    
+
+    /** Limpa o caminho em SVG
+     *
+     */
     limparCaminho: function() 
     {
         if (this.caminho) {
@@ -308,8 +348,8 @@ var View = {
         }
     },
     
-    /**
-     * Helper function to convert the page coordinate to grade coordinate. Converte coordenada da pagina em coordenada na grade
+    /** Função auxiliar para convertar a coordenada de página (bruta)
+     *  para uma coordenada de grade
      */
     toGridCoordinate: function(pageX, pageY) 
     {
@@ -319,8 +359,8 @@ var View = {
         ];
     },
     
-    /**
-     * helper function to convert the grade coordinate to page coordinate. Converte coordenada da grade em coordenada da pagina
+    /** Função auxiliar para converter uma coordenada de grade
+     * para uma coordenada de página (bruta)
      */
     toPageCoordinate: function(gradeX, gradeY) 
     {
@@ -329,18 +369,11 @@ var View = {
             gradeY * this.tamanhoNode
         ];
     },
-    
-    mostrarStatus: function(opcoes) 
-    {
-        var texts = [
-            'comprimento: ' + Math.round(opcoes.pathcomprimento * 100) / 100,
-            'tempo: ' + opcoes.timeSpent + 'ms',
-            'operations: ' + opcoes.operationCount
-        ];
 
-        $('#stats').show().html(texts.join('<br>'));
-    },
-    
+    /** Marca uma dada coordenada como 'suja', ou seja
+     * já acessada anteriormente e pintada como aberta
+     * ou fechada
+     */
     setCoordSuja: function(gradeX, gradeY, sujo) 
     {
         var x, y,
@@ -360,7 +393,10 @@ var View = {
 
         this.coordSuja[gradeY][gradeX] = sujo;
     },
-    
+
+    /** Obtém todas as coordenadas 'sujas'
+     *
+     */
     getCoordsSujas: function() 
     {
         var x, y,
