@@ -200,7 +200,7 @@ $.extend(Controller, {
 
     // Tamanho da grade, linhas por colunas
     tamGrade: [45, 20],
-    opsPorSegundo: 1,
+    opsPorSegundo: 500,
 
     // Posição inicial
     inicioX: 0,
@@ -245,7 +245,7 @@ $.extend(Controller, {
         View.gerarGrade(function() {
             Controller.setPosicaoInicialFinal();
             Controller.bindEventos();
-            Controller.carregarMapa(2);
+            Controller.carregarMapa(3);
             Controller.transition(); // Vai para o proximo estado (Pronto)
         });
 
@@ -426,14 +426,6 @@ $.extend(Controller, {
         });
 
 
-        // $.map(this.porratoda, function(node, i){
-        //     if(node.aberto)
-        //         $("#abertos").append("<li>X:" + node.x + ", Y:" + node.y);
-        //     else
-        //         $("#fechados").append("<li>X:" + node.x + ", Y:" + node.y);
-        // });
-
-
     },
 
     onmodificado: function(estado, de, para)
@@ -452,8 +444,6 @@ $.extend(Controller, {
         });
     },
 
-    porratoda: [],
-
     hookPathFinding: function() {
         console.log(" C> Configurando o pathfinder");
         PF.Node.prototype = {
@@ -468,7 +458,6 @@ $.extend(Controller, {
                     attr: 'aberto',
                     valor: v
                 });
-                Controller.porratoda.push({x: this.x, y: this.y, aberto: true})
             },
             get closed() {
                 return this._fechado;
@@ -481,7 +470,6 @@ $.extend(Controller, {
                     attr: 'fechado',
                     valor: v
                 });
-                Controller.porratoda.push({x: this.x, y: this.y, aberto: false})
             },
             get tested() {
                 return this._testado;
@@ -537,7 +525,6 @@ $.extend(Controller, {
             suportado = View.opsSuportadas.indexOf(op.attr) !== -1;
         } while (!suportado);
 
-        console.log(op);
         let lista = (op.attr == "aberto")
             ? $("#abertos")
             : $("#fechados");
