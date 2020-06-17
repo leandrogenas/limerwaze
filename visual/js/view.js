@@ -66,6 +66,7 @@ var View = {
 
     inicializar: function(opcoes)
     {
+        console.log(" V> Inicializando");
         this.numCol      = opcoes.numCol;
         this.numLin      = opcoes.numLin;
         this.papel        = Raphael('area_desenho');
@@ -80,6 +81,7 @@ var View = {
      */
     gerarGrade: function(callback)
     {
+        console.log(" V> Gerando grade");
         var i, j, x, y,
             rect,
             criarLinha, sleep, tasks,
@@ -134,6 +136,7 @@ var View = {
 
     setPosicaoInicial: function(gradeX, gradeY)
     {
+        console.log(" V> Definindo posição inicial");
         var coord = this.toPageCoordinate(gradeX, gradeY);
         if (!this.nodeInicial) {
             this.nodeInicial = this.papel.rect(
@@ -150,6 +153,7 @@ var View = {
 
     setPosicaoFinal: function(gradeX, gradeY)
     {
+        console.log(" V> Definindo posição final");
         var coord = this.toPageCoordinate(gradeX, gradeY);
         if (!this.nodeFinal) {
             this.nodeFinal = this.papel.rect(
@@ -213,6 +217,7 @@ var View = {
     
     setLiberadoEm: function(gradeX, gradeY, valor) 
     {
+        console.log(" V> Definindo o node {"+gradeX+","+gradeY+"} como "+((valor) ? "liberado" : "bloqueado"));
         var node, i, nodesBloqueados = this.nodesBloqueados;
         if (!nodesBloqueados) {
             nodesBloqueados = this.nodesBloqueados = new Array(this.numLin);
@@ -249,7 +254,7 @@ var View = {
             coord = coords[i];
             x = coord[0];
             y = coord[1];
-            this.rects[y][x].attr(this.nodeStyle.normal);
+            this.rects[y][x].attr(this.estiloNode.normal);
             this.setCoordSuja(x, y, false);
         }
     },
@@ -298,8 +303,8 @@ var View = {
     
     limparCaminho: function() 
     {
-        if (this.path) {
-            this.path.remove();
+        if (this.caminho) {
+            this.caminho.remove();
         }
     },
     
