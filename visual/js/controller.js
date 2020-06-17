@@ -194,7 +194,7 @@ $.extend(Controller, {
         View.gerarGrade(function() {
             Controller.setPosicaoInicialFinal();
             Controller.bindEventos();
-            Controller.carregarMapa(null);
+            Controller.carregarMapa(0);
             Controller.transition(); // Vai para o proximo estado (Pronto)
         });
 
@@ -520,7 +520,7 @@ $.extend(Controller, {
     limparTudo: function()
     {
         this.limparPassos();
-        View.limparNosBloqueados();
+        View.limparNodesBloqueados();
     },
 
     gerarGrade: function()
@@ -543,15 +543,11 @@ $.extend(Controller, {
             this.arrastarFim();
             return;
         }
-        console.log(gradeX, gradeY);
-        console.log(grade.isWalkableAt(gradeX, gradeY));
         if (this.can('desenharParede') && grade.isWalkableAt(gradeX, gradeY)) {
-            console.log("dasdas");
             this.desenharParede(gradeX, gradeY);
             return;
         }
         if (this.can('apagarParede') && !grade.isWalkableAt(gradeX, gradeY)) {
-            console.log("teitei");
             this.apagarParede(gradeX, gradeY);
         }
     },
@@ -688,9 +684,9 @@ $.extend(Controller, {
         return this.isPosicaoInicial(gradeX, gradeY) || this.isPosicaoFinal(gradeX, gradeY);
     },
 
-    carregarMapa: function(nego)
+    carregarMapa: function(idxMapa)
     {
-        let mapa = this.mapas[2];
+        let mapa = this.mapas[idxMapa];
 
         let i, j;
         for(i=0; i<20; i++) {
