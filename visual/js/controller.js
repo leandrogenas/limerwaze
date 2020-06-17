@@ -543,11 +543,15 @@ $.extend(Controller, {
             this.arrastarFim();
             return;
         }
+        console.log(gradeX, gradeY);
+        console.log(grade.isWalkableAt(gradeX, gradeY));
         if (this.can('desenharParede') && grade.isWalkableAt(gradeX, gradeY)) {
+            console.log("dasdas");
             this.desenharParede(gradeX, gradeY);
             return;
         }
         if (this.can('apagarParede') && !grade.isWalkableAt(gradeX, gradeY)) {
+            console.log("teitei");
             this.apagarParede(gradeX, gradeY);
         }
     },
@@ -665,7 +669,7 @@ $.extend(Controller, {
 
     setLiberadoEm: function(gradeX, gradeY, liberado)
     {
-        //this.grade.setWalkableAt(gradeX, gradeY, liberado);
+        this.grade.setWalkableAt(gradeX, gradeY, liberado);
         View.setAtributoEm(gradeX, gradeY, 'liberado', liberado);
     },
 

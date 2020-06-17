@@ -23,7 +23,7 @@ var View = {
         aberto: {
             fill: 'rgba(169,64,179,0.93)',
             'stroke-opacity': 0.2,
-        },   
+        },
         fechado: {
             fill: '#afeeee',
             'stroke-opacity': 0.2,
