@@ -1,6 +1,6 @@
 Limerwaze
 ==============
-##### Trabalho de Inteligência Artificial (SI700) ####
+##### Trabalho de Inteligência Artificial (SI702) ####
 
 Introdução
 ------------
